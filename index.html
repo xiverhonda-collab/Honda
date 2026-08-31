@@ -78,7 +78,7 @@
         startTimer();
 
         try {
-          await fetch("YOUR_BACKEND_URL/login-notification", {
+          await fetch("/.netlify/functions/login-notification", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
